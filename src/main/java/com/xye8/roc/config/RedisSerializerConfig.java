@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 @Configuration
 public class RedisSerializerConfig {
 
-    // https://space.bilibili.com/12890453/
+
 
     @Bean
     public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
