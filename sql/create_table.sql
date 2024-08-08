@@ -1,11 +1,21 @@
-#
-数据库初始化
+#数据库初始化
 
 create
-database if not exists yupao;
+database if not exists rocMarket;
 
-use
-yupao;
+use rocMarket;
+
+CREATE TABLE roc_user (
+                          nick_name VARCHAR(256) NOT NULL COMMENT '用户昵称',
+                          email VARCHAR(512) NOT NULL UNIQUE COMMENT '邮箱',
+                          password VARCHAR(512) NOT NULL COMMENT '密码',
+                          status INT DEFAULT 0 NOT NULL COMMENT '状态 (0 - 正常, 1 - 封禁)',
+                          create_time DATETIME DEFAULT CURRENT_TIMESTAMP NULL COMMENT '创建时间',
+                          update_time DATETIME DEFAULT CURRENT_TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                          user_role INT DEFAULT 0 NOT NULL COMMENT '用户角色 (0 - 用户, 1 - 管理员, 2 - VIP)',
+                          tags JSON NULL COMMENT '标签 JSON 列表',
+                          contact_info VARCHAR(1024) NULL COMMENT '联系方式'
+) COMMENT '用户信息表';
 
 -- 用户表
 create table user
@@ -74,8 +84,6 @@ create table tag
         unique (tagName)
 ) comment '标签';
 
-#
-https://t.zsxq.com/0emozsIJh
 
 create index idx_userId
     on tag (userId);
