@@ -15,15 +15,19 @@ import lombok.Data;
 @Data
 public class CourseSemesters implements Serializable {
     /**
+     * Primary key, auto-incremented
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+
+    /**
      * Foreign key referencing Courses table
      */
-    @TableId
     private Integer course_id;
 
     /**
      * Foreign key referencing Semesters table
      */
-    @TableId
     private Integer semester_id;
 
     @TableField(exist = false)
