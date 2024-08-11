@@ -9,6 +9,7 @@ import com.xye8.roc.mapper.RocUserMapper;
 import com.xye8.roc.model.domain.RocUser;
 import com.xye8.roc.model.domain.Users;
 import com.xye8.roc.model.dto.UserRegisterDto;
+import com.xye8.roc.model.dto.UserSessionDTO;
 import com.xye8.roc.model.request.UserLoginRequest;
 import com.xye8.roc.model.request.UserRegisterRequest;
 import com.xye8.roc.model.vo.UserVO;
@@ -109,7 +110,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         user.setUsername(userName);
         int saveResult = userMapper.insert(user);
         if (saveResult != 1) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "user注册失败");
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"user注册失败");
         }
         return 1;
     }
@@ -147,10 +148,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         // 6. 校验用户状态
         validateStatus(user);
 
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(user, userVO);
+        UserSessionDTO userSessionDTO = new UserSessionDTO();
+        BeanUtils.copyProperties(user, userSessionDTO);
         // 7. 用户登录成功, 将用户信息存入 session
-        request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, userVO);
+        request.getSession().setAttribute(UserConstant.USER_LOGIN_STATE, userSessionDTO);
 
         return user;
     }
@@ -159,8 +160,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     public int userLogout(HttpServletRequest request) {
         // 1. 获取当前会话
         HttpSession session = request.getSession(false);
-        if(session==null){
-            throw new BusinessException(ErrorCode.NULL_ERROR,"没有session连接");
+        if (session == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR, "没有session连接");
         }
         // 2. 如果会话存在，则清除会话中的用户信息
         session.removeAttribute(UserConstant.USER_LOGIN_STATE); // 清除用户信息
@@ -169,8 +170,24 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         // 3. 返回状态码，表示成功登出
         return 1; // 返回 1 表示成功
     }
-}
 
+    @Override
+    public Users getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN, "用户未登录");
+        }
+        UserSessionDTO userSessionDTO = (UserSessionDTO) session.getAttribute(UserConstant.USER_LOGIN_STATE);
+        if (userSessionDTO == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN, "用户未登录");
+        }
+//        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("id",userSessionDTO.getId());
+        Users user=userMapper.selectById(userSessionDTO.getId());
+
+        return user;
+    }
+}
 
 
 

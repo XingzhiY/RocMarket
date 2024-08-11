@@ -74,23 +74,16 @@ public class UserController {
             return ResultUtils.success(result);
         }
 
-    //    @GetMapping("/current")
-    //    public BaseResponse<RocUserVO> getCurrentUser(HttpServletRequest request) {
-    //        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-    //        RocUser currentUser = (RocUser) userObj;
-    //        if (currentUser == null) {
-    //            throw new BusinessException(ErrorCode.NOT_LOGIN);
-    //        }
-    //        long userId = currentUser.getId();
-    //
-    //        RocUser user = userService.getById(userId);
-    //        validateStatus(user);
-    //
-    //        RocUserVO safetyUser = new RocUserVO();
-    //        BeanUtils.copyProperties(user, safetyUser);
-    //        return ResultUtils.success(safetyUser);
-    //    }
-    //
+    @GetMapping("/current")
+    public BaseResponse<UserVO> getCurrentUser(HttpServletRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "request is null");
+        }
+        Users user = userService.getCurrentUser(request);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return ResultUtils.success(userVO);
+    }
     //    @GetMapping("/search")
     //    public BaseResponse<List<RocUserVO>> searchUsers(String nickname, HttpServletRequest request) {
     ////        if (!userService.isAdmin(request)) {

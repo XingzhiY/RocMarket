@@ -5,6 +5,7 @@ import com.xye8.roc.model.domain.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xye8.roc.model.request.UserLoginRequest;
 import com.xye8.roc.model.request.UserRegisterRequest;
+import com.xye8.roc.model.vo.UserVO;
 import org.apache.catalina.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,4 +22,6 @@ public interface UsersService extends IService<Users> {
     Users userLogin(UserLoginRequest userLoginRequest, HttpServletRequest request);
 
     int userLogout(HttpServletRequest request);
+
+    Users getCurrentUser(HttpServletRequest request);
 }
