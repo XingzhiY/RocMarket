@@ -84,6 +84,67 @@ public class UserController {
         BeanUtils.copyProperties(user, userVO);
         return ResultUtils.success(userVO);
     }
+
+    @GetMapping("/search")
+    public BaseResponse<UserVO> searchUserById(@RequestParam("id") Long id) {
+        if (id == null || id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的用户ID");
+        }
+
+        // 根据用户ID查找用户信息
+        Users user = userService.getById(id);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_NULL, "用户不存在");
+        }
+
+        // 将 Users 对象转换为 UserVO 对象
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        return ResultUtils.success(userVO);
+    }
+    @GetMapping("/searchByEmail")
+    public BaseResponse<UserVO> searchUserByEmail(@RequestParam("email") String email) {
+        if (StringUtils.isBlank(email)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Email 不能为空");
+        }
+
+        // 根据用户 Email 查找用户信息
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("email", email);
+        Users user = userService.getOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
+        }
+
+        // 将 Users 对象转换为 UserVO 对象
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        return ResultUtils.success(userVO);
+    }
+
+    @GetMapping("/searchByUsername")
+    public BaseResponse<UserVO> searchUserByUsername(@RequestParam("username") String username) {
+        if (StringUtils.isBlank(username)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名不能为空");
+        }
+
+        // 根据用户名查找用户信息
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        Users user = userService.getOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
+        }
+
+        // 将 Users 对象转换为 UserVO 对象
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+
+        return ResultUtils.success(userVO);
+    }
+
     //    @GetMapping("/search")
     //    public BaseResponse<List<RocUserVO>> searchUsers(String nickname, HttpServletRequest request) {
     ////        if (!userService.isAdmin(request)) {
