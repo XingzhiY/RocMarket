@@ -64,7 +64,7 @@ public class TeamUserVO implements Serializable {
     /**
      * 创建人用户信息
      */
-    private UserVO createUser;
+    private RocUserVO createUser;
 
     /**
      * 已加入的用户数

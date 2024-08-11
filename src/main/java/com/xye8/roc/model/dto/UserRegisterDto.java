@@ -1,17 +1,11 @@
-package com.xye8.roc.model.request;
+package com.xye8.roc.model.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * http接收的用户注册请求体json
- *
-
- */
 @Data
-public class UserRegisterRequest implements Serializable {
-
+public class UserRegisterDto implements Serializable {
     private static final long serialVersionUID = 3191241716373120793L;
 
     private String userEmail;
@@ -19,5 +13,4 @@ public class UserRegisterRequest implements Serializable {
     private String userPassword;
 
     private String checkPassword;
-
 }

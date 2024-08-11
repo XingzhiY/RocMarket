@@ -10,13 +10,12 @@ import com.xye8.roc.model.domain.RocUser;
 import com.xye8.roc.model.dto.UserRegisterDto;
 import com.xye8.roc.model.request.RocUserRegisterRequest;
 import com.xye8.roc.model.request.UserLoginRequest;
-import com.xye8.roc.model.request.UserRegisterRequest;
 import com.xye8.roc.model.vo.RocUserVO;
 import com.xye8.roc.service.RocUserService;
-import com.xye8.roc.service.UsersService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,20 +27,24 @@ import static com.xye8.roc.constant.UserConstant.USER_LOGIN_STATE;
 import static com.xye8.roc.service.impl.RocUserServiceImpl.validateStatus;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/rocUser")
 @CrossOrigin(origins = {"http://localhost:3000"})
 @Slf4j
-public class UserController {
+public class RocUserController {
     @Resource
-    private UsersService usersService;
+    private RocUserService userService;
 
     @PostMapping("/register")
-    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
-        if (userRegisterRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_NULL, "UserRegisterRequest is null");
+    public BaseResponse<Long> userRegister(@RequestBody RocUserRegisterRequest rocUserRegisterRequest) {
+        if (rocUserRegisterRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_NULL, "RocUserRegisterRequest is null");
         }
-
-        long result = usersService.userRegister(userRegisterRequest);
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+        BeanUtils.copyProperties(rocUserRegisterRequest, userRegisterDto);
+        if (StringUtils.isAnyBlank(userRegisterDto.getUserEmail(), userRegisterDto.getUserPassword(), userRegisterDto.getCheckPassword())) {
+            throw new BusinessException(ErrorCode.PARAMS_NULL, "null parameter in RocUserRegisterRequest");
+        }
+        long result = userService.userRegister(userRegisterDto);
         return ResultUtils.success(result);
     }
 

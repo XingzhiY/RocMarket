@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public BaseResponse businessExceptionHandler(BusinessException e) {
-        log.error("businessException: " + e.getMessage(), e);
-        return ResultUtils.error(e.getCode(), e.getMessage(), e.getDescription());
+        log.error("businessException: "+e.getErrorCode().getMessage() + " | "+e.getDescription(), e);
+        return ResultUtils.error(e.getErrorCode(), e.getDescription());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public BaseResponse runtimeExceptionHandler(RuntimeException e) {
         log.error("runtimeException", e);
-        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage(), "");
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage());
     }
 }

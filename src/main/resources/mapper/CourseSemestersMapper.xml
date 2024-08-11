@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xye8.roc.mapper.CourseSemestersMapper">
+
+    <resultMap id="BaseResultMap" type="com.xye8.roc.model.domain.CourseSemesters">
+            <id property="course_id" column="course_id" jdbcType="INTEGER"/>
+            <id property="semester_id" column="semester_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        course_id,semester_id
+    </sql>
+</mapper>
