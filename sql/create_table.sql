@@ -70,12 +70,13 @@ CREATE TABLE Semesters (
 );
 
 CREATE TABLE Course_Semesters (
+                                  id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key, auto-incremented',
                                   course_id INT COMMENT 'Foreign key referencing Courses table',
                                   semester_id INT COMMENT 'Foreign key referencing Semesters table',
-                                  PRIMARY KEY (course_id, semester_id),
                                   FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE,
                                   FOREIGN KEY (semester_id) REFERENCES Semesters(id) ON DELETE CASCADE
 );
+
 
 
 -- Reviews table with a foreign key to Semesters table

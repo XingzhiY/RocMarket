@@ -5,11 +5,12 @@
 <mapper namespace="com.xye8.roc.mapper.CourseSemestersMapper">
 
     <resultMap id="BaseResultMap" type="com.xye8.roc.model.domain.CourseSemesters">
-            <id property="course_id" column="course_id" jdbcType="INTEGER"/>
-            <id property="semester_id" column="semester_id" jdbcType="INTEGER"/>
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="course_id" column="course_id" jdbcType="INTEGER"/>
+            <result property="semester_id" column="semester_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        course_id,semester_id
+        id,course_id,semester_id
     </sql>
 </mapper>

@@ -2,8 +2,8 @@ package com.xye8.roc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xye8.roc.model.domain.Professors;
-import generator.service.ProfessorsService;
 import com.xye8.roc.mapper.ProfessorsMapper;
+import com.xye8.roc.service.ProfessorsService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class ProfessorsServiceImpl extends ServiceImpl<ProfessorsMapper, Professors>
-    implements ProfessorsService{
+    implements ProfessorsService {
 
 }
 

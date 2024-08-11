@@ -2,8 +2,8 @@ package com.xye8.roc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xye8.roc.model.domain.Reviews;
-import generator.service.ReviewsService;
 import com.xye8.roc.mapper.ReviewsMapper;
+import com.xye8.roc.service.ReviewsService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class ReviewsServiceImpl extends ServiceImpl<ReviewsMapper, Reviews>
-    implements ReviewsService{
+    implements ReviewsService {
 
 }
 
