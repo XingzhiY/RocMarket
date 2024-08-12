@@ -7,6 +7,7 @@ import com.xye8.roc.common.ErrorCode;
 import com.xye8.roc.common.ResultUtils;
 import com.xye8.roc.exception.BusinessException;
 import com.xye8.roc.service.CoursesService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,20 +57,20 @@ public class CourseController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的课程ID");
         }
 
-        Courses existingCourse = coursesService.getById(id);
-        if (existingCourse == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
-        }
+        Courses courses = new Courses();
+//        if (existingCourse == null) {
+//            throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
+//        }
 
         // 更新现有课程的信息
-        BeanUtils.copyProperties(coursesAddRequest, existingCourse);
+        BeanUtils.copyProperties(coursesAddRequest, courses);
 
-        boolean updateResult = coursesService.updateById(existingCourse);
+        boolean updateResult = coursesService.updateById(courses);
         if (!updateResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "课程更新失败");
         }
 
-        return ResultUtils.success(existingCourse);
+        return ResultUtils.success(courses);
     }
 
     // 4. 根据ID查询课程
@@ -110,13 +111,13 @@ public class CourseController {
 //    }
 
     // 根据课程代码查询课程数量
-    @GetMapping("/countByCode")
-    public BaseResponse<Integer> countCoursesByCode(@RequestParam("courseCode") String courseCode) {
-        if (courseCode == null || courseCode.trim().isEmpty()) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "课程代码不能为空");
-        }
-
-        int count = coursesService.countByCourseCode(courseCode);
-        return ResultUtils.success(count);
-    }
+//    @GetMapping("/countByCode")
+//    public BaseResponse<Integer> countCoursesByCode(@RequestParam("courseCode") String courseCode) {
+//        if (courseCode == null || courseCode.trim().isEmpty()) {
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR, "课程代码不能为空");
+//        }
+//
+//        int count = coursesService.countByCourseCode(courseCode);
+//        return ResultUtils.success(count);
+//    }
 }

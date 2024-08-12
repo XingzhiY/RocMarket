@@ -2,7 +2,6 @@ package com.xye8.roc.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xye8.roc.model.request.ProfessorsRequest;
-import com.xye8.roc.model.vo.ProfessorsVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class ProfessorController {
 
     // 1. 添加教授
     @PostMapping("/add")
-    public BaseResponse<ProfessorsVO> addProfessor(@RequestBody ProfessorsRequest professorsRequest) {
+    public BaseResponse<Professors> addProfessor(@RequestBody ProfessorsRequest professorsRequest) {
         if (professorsRequest == null || professorsRequest.getName() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "教授信息或名字不能为空");
         }
@@ -48,15 +47,15 @@ public class ProfessorController {
         }
 
         // 转换为 VO 对象并返回
-        ProfessorsVO professorsVO = new ProfessorsVO();
-        BeanUtils.copyProperties(professors, professorsVO);
+//        Professors professorsVO = new Professors();
+//        BeanUtils.copyProperties(professors, professorsVO);
 
-        return ResultUtils.success(professorsVO);
+        return ResultUtils.success(professors);
     }
 
     // 2. 删除教授
     @DeleteMapping("/delete/{id}")
-    public BaseResponse<ProfessorsVO> deleteProfessor(@PathVariable("id") Long id) {
+    public BaseResponse<Professors> deleteProfessor(@PathVariable("id") Long id) {
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的教授ID");
         }
@@ -74,16 +73,16 @@ public class ProfessorController {
         }
 
         // 将删除的教授信息转换为 VO 对象并返回
-        ProfessorsVO professorsVO = new ProfessorsVO();
-        BeanUtils.copyProperties(professor, professorsVO);
+//        Professors professorsVO = new Professors();
+//        BeanUtils.copyProperties(professor, professorsVO);
 
-        return ResultUtils.success(professorsVO);
+        return ResultUtils.success(professor);
     }
 
 
     // 3. 更新教授信息
     @PutMapping("/update/{id}")
-    public BaseResponse<ProfessorsVO> updateProfessor(@PathVariable("id") Long id, @RequestBody ProfessorsRequest professorsRequest) {
+    public BaseResponse<Professors> updateProfessor(@PathVariable("id") Long id, @RequestBody ProfessorsRequest professorsRequest) {
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的教授ID");
         }
@@ -93,25 +92,26 @@ public class ProfessorController {
         }
 
         // 查找教授是否存在
-        Professors existingProfessor = professorsService.getById(id);
-        if (existingProfessor == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND, "教授不存在");
-        }
+//        Professors existingProfessor = professorsService.getById(id);
+//        if (existingProfessor == null) {
+//            throw new BusinessException(ErrorCode.NOT_FOUND, "教授不存在");
+//        }
 
+        Professors professors=new Professors();
         // 更新教授信息
-        BeanUtils.copyProperties(professorsRequest, existingProfessor);
+        BeanUtils.copyProperties(professorsRequest, professors);
 
         // 执行更新操作
-        boolean updateResult = professorsService.updateById(existingProfessor);
+        boolean updateResult = professorsService.updateById(professors);
         if (!updateResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "教授更新失败");
         }
 
         // 将更新后的教授信息转换为 VO 对象并返回
-        ProfessorsVO professorsVO = new ProfessorsVO();
-        BeanUtils.copyProperties(existingProfessor, professorsVO);
+//        Professors professorsVO = new Professors();
+//        BeanUtils.copyProperties(professors, professorsVO);
 
-        return ResultUtils.success(professorsVO);
+        return ResultUtils.success(professors);
     }
 
 
@@ -131,7 +131,7 @@ public class ProfessorController {
         return ResultUtils.success(professor);
     }
     @GetMapping("/searchByName")
-    public BaseResponse<List<ProfessorsVO>> searchProfessorByName(@RequestParam("name") String name) {
+    public BaseResponse<List<Professors>> searchProfessorByName(@RequestParam("name") String name) {
         if (StringUtils.isBlank(name)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "教授姓名不能为空");
         }
@@ -145,34 +145,34 @@ public class ProfessorController {
             throw new BusinessException(ErrorCode.NOT_FOUND, "未找到匹配的教授");
         }
 
-        // 将 Professors 列表转换为 ProfessorsVO 列表
-        List<ProfessorsVO> professorsVOList = professorsList.stream()
-                .map(professor -> {
-                    ProfessorsVO professorsVO = new ProfessorsVO();
-                    BeanUtils.copyProperties(professor, professorsVO);
-                    return professorsVO;
-                })
-                .collect(Collectors.toList());
+//        // 将 Professors 列表转换为 Professors 列表
+//        List<Professors> professorsVOList = professorsList.stream()
+//                .map(professor -> {
+//                    Professors professorsVO = new Professors();
+//                    BeanUtils.copyProperties(professor, professorsVO);
+//                    return professorsVO;
+//                })
+//                .collect(Collectors.toList());
 
-        return ResultUtils.success(professorsVOList);
+        return ResultUtils.success(professorsList);
     }
 
     // 5. 查询所有教授
     @GetMapping("/list")
-    public BaseResponse<List<ProfessorsVO>> listProfessors() {
+    public BaseResponse<List<Professors>> listProfessors() {
         // 获取所有教授列表
         List<Professors> professorsList = professorsService.list();
 
-        // 将 Professors 转换为 ProfessorsVO
-        List<ProfessorsVO> professorsVOList = professorsList.stream()
-                .map(professor -> {
-                    ProfessorsVO professorsVO = new ProfessorsVO();
-                    BeanUtils.copyProperties(professor, professorsVO);
-                    return professorsVO;
-                })
-                .collect(Collectors.toList());
+//        // 将 Professors 转换为 Professors
+//        List<Professors> professorsVOList = professorsList.stream()
+//                .map(professor -> {
+//                    Professors professorsVO = new Professors();
+//                    BeanUtils.copyProperties(professor, professorsVO);
+//                    return professorsVO;
+//                })
+//                .collect(Collectors.toList());
 
-        return ResultUtils.success(professorsVOList);
+        return ResultUtils.success(professorsList);
     }
 
 }

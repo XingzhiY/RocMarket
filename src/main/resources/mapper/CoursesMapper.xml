@@ -28,7 +28,7 @@
         average_score,number_of_reviews,is_deleted,
         created_at,updated_at
     </sql>
-    <select id="countByCourseCode" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM courses WHERE course_code=#{courseCode}
+    <select id="countByCourseCodeAndProfessor" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM courses WHERE course_code=#{courseCode} AND professor_id=#{professorId};
     </select>
 </mapper>

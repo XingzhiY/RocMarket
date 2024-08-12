@@ -13,5 +13,5 @@ public interface CoursesService extends IService<Courses> {
 
     Courses createCourse(CoursesAddRequest coursesAddRequest);
 
-    int countByCourseCode(String courseCode);
+
 }
