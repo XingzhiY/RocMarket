@@ -5,17 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xye8.roc.common.BaseResponse;
 import com.xye8.roc.common.ErrorCode;
 import com.xye8.roc.common.ResultUtils;
-import com.xye8.roc.constant.UserConstant;
 import com.xye8.roc.exception.BusinessException;
-import com.xye8.roc.model.domain.RocUser;
 import com.xye8.roc.model.domain.Users;
-import com.xye8.roc.model.dto.UserRegisterDto;
-import com.xye8.roc.model.request.RocUserRegisterRequest;
 import com.xye8.roc.model.request.UserLoginRequest;
 import com.xye8.roc.model.request.UserRegisterRequest;
-import com.xye8.roc.model.vo.RocUserVO;
 import com.xye8.roc.model.vo.UserVO;
-import com.xye8.roc.service.RocUserService;
 import com.xye8.roc.service.UsersService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,11 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.xye8.roc.constant.UserConstant.USER_LOGIN_STATE;
-import static com.xye8.roc.service.impl.RocUserServiceImpl.validateStatus;
 
 @RestController
 @RequestMapping("/user")
@@ -36,7 +25,7 @@ import static com.xye8.roc.service.impl.RocUserServiceImpl.validateStatus;
 @Slf4j
 public class UserController {
     @Resource
-    private UsersService userService;
+    private UsersService usersService;
 
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
@@ -44,7 +33,7 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_NULL, "UserRegisterRequest is null");
         }
 
-        long result = userService.userRegister(userRegisterRequest);
+        long result = usersService.userRegister(userRegisterRequest);
         return ResultUtils.success(result);
     }
 
@@ -58,7 +47,7 @@ public class UserController {
         //        if (StringUtils.isAnyBlank(userEmail, userPassword)) {
         //            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         //        }
-        Users user = userService.userLogin(userLoginRequest, request);
+        Users user = usersService.userLogin(userLoginRequest, request);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         // 7. 用户登录成功, 将用户信息存入 session
@@ -70,7 +59,7 @@ public class UserController {
             if (request == null) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "request is null");
             }
-            int result = userService.userLogout(request);
+            int result = usersService.userLogout(request);
             return ResultUtils.success(result);
         }
 
@@ -79,7 +68,7 @@ public class UserController {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "request is null");
         }
-        Users user = userService.getCurrentUser(request);
+        Users user = usersService.getCurrentUser(request);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return ResultUtils.success(userVO);
@@ -92,7 +81,7 @@ public class UserController {
         }
 
         // 根据用户ID查找用户信息
-        Users user = userService.getById(id);
+        Users user = usersService.getById(id);
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_NULL, "用户不存在");
         }
@@ -112,7 +101,7 @@ public class UserController {
         // 根据用户 Email 查找用户信息
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", email);
-        Users user = userService.getOne(queryWrapper);
+        Users user = usersService.getOne(queryWrapper);
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
         }
@@ -133,7 +122,7 @@ public class UserController {
         // 根据用户名查找用户信息
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
-        Users user = userService.getOne(queryWrapper);
+        Users user = usersService.getOne(queryWrapper);
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
         }
