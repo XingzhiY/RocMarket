@@ -86,7 +86,7 @@ CREATE TABLE Reviews (
                          course_id INT NOT NULL COMMENT 'Foreign key referencing Courses table',
                          semester_id INT NOT NULL COMMENT 'Foreign key referencing Semesters table',
 
-                         score DECIMAL(4, 2) COMMENT 'Score given in the review',
+                         score DECIMAL(4, 2) COMMENT 'Score given in the review 1-5',
                          difficulty TINYINT(1) COMMENT 'Difficulty of the course, 1=低, 2=中等, 3=高',
                          homework_amount TINYINT(1) COMMENT 'Amount of homework, 1=少, 2=中等, 3=很多',
                          grading_quality TINYINT(1) COMMENT 'Quality of grading, 1=严苛, 2=一般, 3=宽松',
