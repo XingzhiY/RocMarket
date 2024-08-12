@@ -2,6 +2,7 @@ package com.xye8.roc.service;
 
 import com.xye8.roc.model.domain.Courses;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xye8.roc.model.request.CoursesAddRequest;
 
 /**
 * @author Xingzhi Ye
@@ -10,4 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CoursesService extends IService<Courses> {
 
+    Courses createCourse(CoursesAddRequest coursesAddRequest);
+
+    int countByCourseCode(String courseCode);
 }
