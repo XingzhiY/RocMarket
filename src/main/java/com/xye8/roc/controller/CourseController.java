@@ -1,36 +1,36 @@
 package com.xye8.roc.controller;
 
-import com.xye8.roc.model.domain.Courses;
-import com.xye8.roc.model.request.CoursesAddRequest;
+import com.xye8.roc.model.domain.Course;
+import com.xye8.roc.model.request.CourseAddRequest;
 import com.xye8.roc.common.BaseResponse;
 import com.xye8.roc.common.ErrorCode;
 import com.xye8.roc.common.ResultUtils;
 import com.xye8.roc.exception.BusinessException;
-import com.xye8.roc.service.CoursesService;
-import org.apache.commons.lang3.StringUtils;
+import com.xye8.roc.service.CourseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("/course")
 public class CourseController {
 
     @Resource
-    private CoursesService coursesService;
+    private CourseService courseService;
 
     // 创建新课程
     @PostMapping("/add")
-    public BaseResponse<Courses> addCourse(@RequestBody CoursesAddRequest coursesAddRequest) {
+    public BaseResponse<Course> addCourse(@Valid @RequestBody CourseAddRequest courseAddRequest) {
         // 校验请求体中的必要字段
-        if (coursesAddRequest == null) {
+        if (courseAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "coursesAddRequest为空");
         }
 
         // 调用服务层处理业务逻辑
-        Courses course = coursesService.createCourse(coursesAddRequest);
+        Course course = courseService.createCourse(courseAddRequest);
 
         return ResultUtils.success(course);
     }
@@ -42,7 +42,7 @@ public class CourseController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的课程ID");
         }
 
-        boolean removeResult = coursesService.removeById(id);
+        boolean removeResult = courseService.removeById(id);
         if (!removeResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "课程删除失败");
         }
@@ -52,35 +52,40 @@ public class CourseController {
 
     // 3. 更新课程信息
     @PutMapping("/update/{id}")
-    public BaseResponse<Courses> updateCourse(@PathVariable("id") Long id, @RequestBody CoursesAddRequest coursesAddRequest) {
+    public BaseResponse<Course> updateCourse(@PathVariable("id") Long id, @Valid @RequestBody CourseAddRequest courseAddRequest) {
+        // 验证课程ID的合法性
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的课程ID");
         }
 
-        Courses courses = new Courses();
-//        if (existingCourse == null) {
-//            throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
-//        }
+        // 查找现有课程
+        Course existingCourse = courseService.getById(id);
+        if (existingCourse == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
+        }
 
-        // 更新现有课程的信息
-        BeanUtils.copyProperties(coursesAddRequest, courses);
+        // 在现有课程的基础上更新信息
+        BeanUtils.copyProperties(courseAddRequest, existingCourse);
 
-        boolean updateResult = coursesService.updateById(courses);
+        // 执行更新操作
+        boolean updateResult = courseService.updateById(existingCourse);
         if (!updateResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "课程更新失败");
         }
 
-        return ResultUtils.success(courses);
+        // 返回更新后的课程信息
+        return ResultUtils.success(existingCourse);
     }
+
 
     // 4. 根据ID查询课程
     @GetMapping("/get/{id}")
-    public BaseResponse<Courses> getCourseById(@PathVariable("id") Long id) {
+    public BaseResponse<Course> getCourseById(@PathVariable("id") Long id) {
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的课程ID");
         }
 
-        Courses course = coursesService.getById(id);
+        Course course = courseService.getById(id);
         if (course == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
         }
@@ -90,8 +95,8 @@ public class CourseController {
 
     // 5. 查询所有课程
     @GetMapping("/list")
-    public BaseResponse<List<Courses>> listCourses() {
-        List<Courses> courseList = coursesService.list();
+    public BaseResponse<List<Course>> listCourse() {
+        List<Course> courseList = courseService.list();
         return ResultUtils.success(courseList);
     }
 

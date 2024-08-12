@@ -1,12 +1,9 @@
 package com.xye8.roc.service;
 
-import com.xye8.roc.model.domain.RocUser;
-import com.xye8.roc.model.domain.Users;
+import com.xye8.roc.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xye8.roc.model.request.UserLoginRequest;
 import com.xye8.roc.model.request.UserRegisterRequest;
-import com.xye8.roc.model.vo.UserVO;
-import org.apache.catalina.User;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,13 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 * @description 针对表【users】的数据库操作Service
 * @createDate 2024-08-11 14:59:32
 */
-public interface UsersService extends IService<Users> {
+public interface UserService extends IService<User> {
 
     long userRegister(UserRegisterRequest userRegisterRequest);
 
-    Users userLogin(UserLoginRequest userLoginRequest, HttpServletRequest request);
+    User userLogin(UserLoginRequest userLoginRequest, HttpServletRequest request);
 
     int userLogout(HttpServletRequest request);
 
-    Users getCurrentUser(HttpServletRequest request);
+    User getCurrentUser(HttpServletRequest request);
 }

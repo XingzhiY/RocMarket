@@ -1,11 +1,10 @@
-package com.xye8.roc.model.domain;
+package com.xye8.roc.model.request;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 
@@ -13,12 +12,7 @@ import lombok.Data;
  */
 @TableName(value ="semesters")
 @Data
-public class Semesters implements Serializable {
-    /**
-     * Primary key, auto-incremented
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+public class SemesterAddRequest implements Serializable {
 
     /**
      * Semester name, e.g., 2024春

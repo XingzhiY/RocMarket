@@ -5,35 +5,24 @@ import com.xye8.roc.exception.BusinessException;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @TableName courses
  */
 @Data
-public class CoursesAddRequest implements Serializable {
+public class CourseAddRequest implements Serializable {
 
-
-    /**
-     * Course code
-     */
+    @NotBlank(message = "Course code cannot be empty")
     private String course_code;
 
-    /**
-     * Course name
-     */
+    @NotBlank(message = "Course name cannot be empty")
     private String course_name;
 
-    /**
-     * Foreign key referencing Professors table
-     */
+    @NotNull(message = "Professor ID cannot be null")
     private Integer professor_id;
-
-    /**
-     * Number of credits
-     */
-    private Integer credits;
 
     // 重写 setCourse_code 方法，去除空格并转换为大写
     public void setCourse_code(String course_code) {
@@ -44,15 +33,6 @@ public class CoursesAddRequest implements Serializable {
     public void setCourse_name(String course_name) {
         this.course_name = course_name != null ? course_name.trim() : null;
     }
-
-    // 重写 setCredits 方法，可以在此处添加进一步的验证逻辑
-    public void setCredits(Integer credits) {
-        if (credits != null && (credits < 1 || credits > 10)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"课程学分无效，应在1到10之间");
-        }
-        this.credits = credits;
-    }
-
 
     private static final long serialVersionUID = 1L;
 }

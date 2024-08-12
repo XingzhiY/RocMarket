@@ -6,11 +6,11 @@ import com.xye8.roc.common.BaseResponse;
 import com.xye8.roc.common.ErrorCode;
 import com.xye8.roc.common.ResultUtils;
 import com.xye8.roc.exception.BusinessException;
-import com.xye8.roc.model.domain.Users;
+import com.xye8.roc.model.domain.User;
 import com.xye8.roc.model.request.UserLoginRequest;
 import com.xye8.roc.model.request.UserRegisterRequest;
 import com.xye8.roc.model.vo.UserVO;
-import com.xye8.roc.service.UsersService;
+import com.xye8.roc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class UserController {
     @Resource
-    private UsersService usersService;
+    private UserService userService;
 
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
@@ -33,7 +33,7 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_NULL, "UserRegisterRequest is null");
         }
 
-        long result = usersService.userRegister(userRegisterRequest);
+        long result = userService.userRegister(userRegisterRequest);
         return ResultUtils.success(result);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
         //        if (StringUtils.isAnyBlank(userEmail, userPassword)) {
         //            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
         //        }
-        Users user = usersService.userLogin(userLoginRequest, request);
+        User user = userService.userLogin(userLoginRequest, request);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         // 7. 用户登录成功, 将用户信息存入 session
@@ -59,7 +59,7 @@ public class UserController {
             if (request == null) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "request is null");
             }
-            int result = usersService.userLogout(request);
+            int result = userService.userLogout(request);
             return ResultUtils.success(result);
         }
 
@@ -68,7 +68,7 @@ public class UserController {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "request is null");
         }
-        Users user = usersService.getCurrentUser(request);
+        User user = userService.getCurrentUser(request);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return ResultUtils.success(userVO);
@@ -81,7 +81,7 @@ public class UserController {
         }
 
         // 根据用户ID查找用户信息
-        Users user = usersService.getById(id);
+        User user = userService.getById(id);
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_NULL, "用户不存在");
         }
@@ -99,9 +99,9 @@ public class UserController {
         }
 
         // 根据用户 Email 查找用户信息
-        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", email);
-        Users user = usersService.getOne(queryWrapper);
+        User user = userService.getOne(queryWrapper);
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
         }
@@ -120,9 +120,9 @@ public class UserController {
         }
 
         // 根据用户名查找用户信息
-        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
-        Users user = usersService.getOne(queryWrapper);
+        User user = userService.getOne(queryWrapper);
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
         }

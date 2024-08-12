@@ -1,9 +1,10 @@
 package com.xye8.roc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xye8.roc.model.domain.CourseSemesters;
-import com.xye8.roc.mapper.CourseSemestersMapper;
-import com.xye8.roc.service.CourseSemestersService;
+import com.xye8.roc.mapper.CourseSemesterMapper;
+import com.xye8.roc.model.domain.CourseSemester;
+
+import com.xye8.roc.service.CourseSemesterService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-08-11 14:59:32
 */
 @Service
-public class CourseSemestersServiceImpl extends ServiceImpl<CourseSemestersMapper, CourseSemesters>
-    implements CourseSemestersService {
+public class CourseSemesterServiceImpl extends ServiceImpl<CourseSemesterMapper, CourseSemester>
+    implements CourseSemesterService {
 
 }
 

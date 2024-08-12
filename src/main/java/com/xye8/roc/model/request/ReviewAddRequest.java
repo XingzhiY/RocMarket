@@ -12,26 +12,25 @@ import java.util.Date;
 @Data
 public class ReviewAddRequest implements Serializable {
 
-
     /**
-     * Foreign key referencing Users table
+     * Foreign key referencing User table
      */
     private Integer user_id;
 
     /**
-     * Foreign key referencing Courses table
+     * Foreign key referencing Course table
      */
     private Integer course_id;
 
     /**
-     * Foreign key referencing Semesters table
+     * Foreign key referencing Semester table
      */
     private Integer semester_id;
 
     /**
-     * Score given in the review
+     * Score given in the review 1-5
      */
-    private BigDecimal score;
+    private Integer score;
 
     /**
      * Difficulty of the course, 1=低, 2=中等, 3=高
@@ -80,12 +79,13 @@ public class ReviewAddRequest implements Serializable {
         this.semester_id = semester_id;
     }
 
-    public void setScore(BigDecimal score) {
-        if (score == null || score.compareTo(new BigDecimal("1")) < 0 || score.compareTo(new BigDecimal("5")) > 0) {
+    public void setScore(Integer score) {
+        if (score == null || score < 1 || score > 5) {
             throw new IllegalArgumentException("评分必须在1到5之间");
         }
         this.score = score;
     }
+
 
     public void setDifficulty(Integer difficulty) {
         if (difficulty == null || difficulty < 1 || difficulty > 3) {

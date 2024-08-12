@@ -1,12 +1,10 @@
 package com.xye8.roc.controller;
 
-import com.xye8.roc.model.request.SemestersAddRequest;
-import com.xye8.roc.service.SemestersService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.xye8.roc.model.request.SemesterAddRequest;
+import com.xye8.roc.service.SemesterService;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xye8.roc.model.domain.Semesters;
+import com.xye8.roc.model.domain.Semester;
 
 import com.xye8.roc.common.BaseResponse;
 import com.xye8.roc.common.ErrorCode;
@@ -18,30 +16,30 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/semesters")
+@RequestMapping("/semester")
 public class SemesterController {
 
 
     @Resource
-    private SemestersService semestersService;
+    private SemesterService semesterService;
 
     // 1. 添加学期
     @PostMapping("/add")
-    public BaseResponse<Semesters> addSemester(@RequestBody SemestersAddRequest semestersAddRequest) {
-        if (semestersAddRequest == null || semestersAddRequest.getSemester_name() == null) {
+    public BaseResponse<Semester> addSemester(@RequestBody SemesterAddRequest semesterAddRequest) {
+        if (semesterAddRequest == null || semesterAddRequest.getSemester_name() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "学期信息或名称不能为空");
         }
 
         // 检查学期名称是否重复
-        QueryWrapper<Semesters> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("semester_name", semestersAddRequest.getSemester_name());
-        long count = semestersService.count(queryWrapper);
+        QueryWrapper<Semester> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("semester_name", semesterAddRequest.getSemester_name());
+        long count = semesterService.count(queryWrapper);
         if (count > 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "学期名称已存在");
         }
-        Semesters semester = new Semesters();
-        BeanUtils.copyProperties(semestersAddRequest, semester);
-        boolean saveResult = semestersService.save(semester);
+        Semester semester = new Semester();
+        BeanUtils.copyProperties(semesterAddRequest, semester);
+        boolean saveResult = semesterService.save(semester);
         if (!saveResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "学期添加失败");
         }
@@ -64,7 +62,7 @@ public class SemesterController {
         //        }
 
         // 如果找到，进行删除
-        boolean removeResult = semestersService.removeById(id);
+        boolean removeResult = semesterService.removeById(id);
         if (!removeResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "学期删除失败");
         }
@@ -75,25 +73,25 @@ public class SemesterController {
 
     // 3. 更新学期信息
     @PutMapping("/update/{id}")
-    public BaseResponse<Semesters> updateSemester(@PathVariable("id") Long id, @RequestBody SemestersAddRequest semestersAddRequest) {
+    public BaseResponse<Semester> updateSemester(@PathVariable("id") Long id, @RequestBody SemesterAddRequest semesterAddRequest) {
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的学期ID");
         }
 
-        if (semestersAddRequest == null || semestersAddRequest.getSemester_name() == null) {
+        if (semesterAddRequest == null || semesterAddRequest.getSemester_name() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "学期信息或名称不能为空");
         }
 
         // 查找学期是否存在
-        Semesters existingSemester = semestersService.getById(id);
+        Semester existingSemester = semesterService.getById(id);
         if (existingSemester == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "学期不存在");
         }
 
         // 更新学期信息
-        BeanUtils.copyProperties(semestersAddRequest, existingSemester);
+        BeanUtils.copyProperties(semesterAddRequest, existingSemester);
 
-        boolean updateResult = semestersService.updateById(existingSemester);
+        boolean updateResult = semesterService.updateById(existingSemester);
         if (!updateResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "学期更新失败");
         }
@@ -103,12 +101,12 @@ public class SemesterController {
 
     // 4. 根据ID查询学期
     @GetMapping("/get/{id}")
-    public BaseResponse<Semesters> getSemesterById(@PathVariable("id") Long id) {
+    public BaseResponse<Semester> getSemesterById(@PathVariable("id") Long id) {
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的学期ID");
         }
 
-        Semesters semester = semestersService.getById(id);
+        Semester semester = semesterService.getById(id);
         if (semester == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "学期不存在");
         }
@@ -117,7 +115,7 @@ public class SemesterController {
     }
 
     @GetMapping("/getByName")
-    public BaseResponse<Semesters> getSemesterByName(@RequestParam("name") String name) {
+    public BaseResponse<Semester> getSemesterByName(@RequestParam("name") String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "学期名称不能为空");
         }
@@ -126,9 +124,9 @@ public class SemesterController {
         String standardizedName = standardizeSemesterName(name);
 
         // 根据标准化后的学期名称查询
-        QueryWrapper<Semesters> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Semester> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("semester_name", standardizedName);
-        Semesters semester = semestersService.getOne(queryWrapper);
+        Semester semester = semesterService.getOne(queryWrapper);
 
         if (semester == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "学期不存在");
@@ -151,9 +149,9 @@ public class SemesterController {
 
     // 5. 查询所有学期
     @GetMapping("/list")
-    public BaseResponse<List<Semesters>> listSemesters() {
-        List<Semesters> semestersList = semestersService.list();
-        return ResultUtils.success(semestersList);
+    public BaseResponse<List<Semester>> listSemesters() {
+        List<Semester> semesterList = semesterService.list();
+        return ResultUtils.success(semesterList);
     }
 
 }

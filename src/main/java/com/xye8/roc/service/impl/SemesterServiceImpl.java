@@ -1,11 +1,10 @@
 package com.xye8.roc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xye8.roc.model.domain.Semesters;
-import com.xye8.roc.mapper.SemestersMapper;
-import com.xye8.roc.service.SemestersService;
+import com.xye8.roc.mapper.SemesterMapper;
+import com.xye8.roc.model.domain.Semester;
+import com.xye8.roc.service.SemesterService;
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 */
 @Service
 @Primary
-public class SemestersServiceImpl extends ServiceImpl<SemestersMapper, Semesters>
-    implements SemestersService {
+public class SemesterServiceImpl extends ServiceImpl<SemesterMapper, Semester>
+    implements SemesterService {
 
 }
 

@@ -1,8 +1,7 @@
 package com.xye8.roc.service;
 
-import com.xye8.roc.model.domain.Semesters;
+import com.xye8.roc.model.domain.Semester;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,6 +11,6 @@ import org.springframework.stereotype.Service;
 */
 @Service
 
-public interface SemestersService extends IService<Semesters> {
+public interface SemesterService extends IService<Semester> {
 
 }
