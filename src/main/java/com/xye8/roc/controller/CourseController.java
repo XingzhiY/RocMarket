@@ -1,5 +1,6 @@
 package com.xye8.roc.controller;
 
+import com.xye8.roc.mapper.ProfessorMapper;
 import com.xye8.roc.model.domain.Course;
 import com.xye8.roc.model.request.CourseAddRequest;
 import com.xye8.roc.common.BaseResponse;
@@ -20,7 +21,8 @@ public class CourseController {
 
     @Resource
     private CourseService courseService;
-
+    @Resource
+    private ProfessorMapper professorMapper;
     // 创建新课程
     @PostMapping("/add")
     public BaseResponse<Course> addCourse(@Valid @RequestBody CourseAddRequest courseAddRequest) {
@@ -62,6 +64,15 @@ public class CourseController {
         Course existingCourse = courseService.getById(id);
         if (existingCourse == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
+        }
+        // 校验请求体中的必要字段
+        if (courseAddRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "coursesAddRequest为空");
+        }
+
+        // 检查 professor_id 是否存在
+        if (professorMapper.selectById(courseAddRequest.getProfessor_id()) == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "教授不存在");
         }
 
         // 在现有课程的基础上更新信息

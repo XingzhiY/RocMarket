@@ -18,7 +18,9 @@ public interface ReviewService extends IService<Review> {
 
     Review createReview(ReviewAddRequest reviewAddRequest);
 
-//    Reviews updateReviews(Long id, ReviewsUpdateRequest reviewUpdateRequest);
+    Review updateReview(Long id, ReviewAddRequest reviewAddRequest);
+
+    //    Reviews updateReviews(Long id, ReviewsUpdateRequest reviewUpdateRequest);
 //
 //    boolean deleteReviews(Long id);
     
