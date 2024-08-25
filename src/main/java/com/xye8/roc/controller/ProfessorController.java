@@ -1,7 +1,9 @@
 package com.xye8.roc.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xye8.roc.model.domain.Course;
 import com.xye8.roc.model.request.ProfessorRequest;
+import com.xye8.roc.service.CourseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import com.xye8.roc.common.ErrorCode;
 import com.xye8.roc.common.ResultUtils;
 import com.xye8.roc.exception.BusinessException;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -20,8 +23,10 @@ import java.util.List;
 @RequestMapping("/professor")
 public class ProfessorController {
 
-    @Autowired
+    @Resource
     private ProfessorService professorService;
+    @Resource
+    private CourseService courseService;
 
     // 1. 添加教授
     @PostMapping("/add")
@@ -173,6 +178,26 @@ public class ProfessorController {
 //                .collect(Collectors.toList());
 
         return ResultUtils.success(professorList);
+    }
+    @GetMapping("/listCourses/{id}")
+    public BaseResponse<List<Course>> listProfessorCourses(@PathVariable("id") Long id) {
+        // 获取所有教授列表
+
+        if (id == null || id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无效的教授ID");
+        }
+
+        Professor professor = professorService.getById(id);
+        if (professor == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "教授不存在");
+        }
+        QueryWrapper<Course> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("professor_id",id);
+        List<Course> list=courseService.list(queryWrapper);
+        if (list == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "没有教授的课程");
+        }
+        return ResultUtils.success(list);
     }
 
 }
