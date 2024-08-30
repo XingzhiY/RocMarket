@@ -30,8 +30,8 @@ import java.util.Arrays;
  */
 @SpringBootTest
 class MyApplicationTest {
-//    @Resource
-//    XmlParser xmlParser;
+    @Resource
+    XmlParser xmlParser;
 
     @Test
     void testDigest() throws NoSuchAlgorithmException {
@@ -73,24 +73,24 @@ class MyApplicationTest {
                     // 将实体内容转为字符串
                     String result = EntityUtils.toString(entity1);
 //                    System.out.println("Response content: " + result);
-                    XmlParser.parse(result);
+                    xmlParser.parse(result);
                 }
 
 
-                System.out.println(entity1);
+//                System.out.println(entity1);
                 EntityUtils.consume(entity1);
                 return null;
             });
 
-            ClassicHttpRequest httpPost = ClassicRequestBuilder.post("http://httpbin.org/post").setEntity(new UrlEncodedFormEntity(Arrays.asList(new BasicNameValuePair("username", "vip"), new BasicNameValuePair("password", "secret")))).build();
-            httpclient.execute(httpPost, response -> {
-                System.out.println(response.getCode() + " " + response.getReasonPhrase());
-                final HttpEntity entity2 = response.getEntity();
-                // do something useful with the response body
-                // and ensure it is fully consumed
-                EntityUtils.consume(entity2);
-                return null;
-            });
+//            ClassicHttpRequest httpPost = ClassicRequestBuilder.post("http://httpbin.org/post").setEntity(new UrlEncodedFormEntity(Arrays.asList(new BasicNameValuePair("username", "vip"), new BasicNameValuePair("password", "secret")))).build();
+//            httpclient.execute(httpPost, response -> {
+//                System.out.println(response.getCode() + " " + response.getReasonPhrase());
+//                final HttpEntity entity2 = response.getEntity();
+//                // do something useful with the response body
+//                // and ensure it is fully consumed
+//                EntityUtils.consume(entity2);
+//                return null;
+//            });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
