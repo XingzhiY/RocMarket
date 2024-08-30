@@ -12,6 +12,10 @@ import lombok.Data;
  * 
  * @TableName review
  */
+/**
+ *
+ * @TableName review
+ */
 @TableName(value ="review")
 @Data
 public class Review implements Serializable {
@@ -32,9 +36,9 @@ public class Review implements Serializable {
     private Integer course_id;
 
     /**
-     * Foreign key referencing Semester table
+     * Semester fall2024
      */
-    private Integer semester_id;
+    private String semester;
 
     /**
      * Score given in the review 1-5

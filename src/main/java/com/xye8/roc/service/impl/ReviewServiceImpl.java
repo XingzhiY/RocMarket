@@ -35,6 +35,7 @@ public class ReviewServiceImpl extends ServiceImpl<ReviewMapper, Review> impleme
 
     @Override
     public Review createReview(ReviewAddRequest reviewAddRequest) {
+        //todo:检查是否是用户自己发送
 
         // 检查 user_id 是否存在
         // 检查 user_id 是否存在
@@ -47,10 +48,6 @@ public class ReviewServiceImpl extends ServiceImpl<ReviewMapper, Review> impleme
             throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
         }
 
-        // 检查 semester_id 是否存在
-        if (semesterMapper.selectById(reviewAddRequest.getSemester_id()) == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND, "学期不存在");
-        }
 
         // 创建新的 Review 实体对象
         Review review = new Review();
@@ -76,7 +73,6 @@ public class ReviewServiceImpl extends ServiceImpl<ReviewMapper, Review> impleme
         }
 
 
-
         // 检查 user_id 是否存在
         if (userMapper.selectById(reviewAddRequest.getUser_id()) == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND, "用户不存在");
@@ -87,10 +83,6 @@ public class ReviewServiceImpl extends ServiceImpl<ReviewMapper, Review> impleme
             throw new BusinessException(ErrorCode.NOT_FOUND, "课程不存在");
         }
 
-        // 检查 semester_id 是否存在
-        if (semesterMapper.selectById(reviewAddRequest.getSemester_id()) == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND, "学期不存在");
-        }
 
         // 将请求中的数据复制到现有的 Review 对象中
         BeanUtils.copyProperties(reviewAddRequest, existingReview);

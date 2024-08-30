@@ -31,9 +31,8 @@ public class ReviewAddRequest implements Serializable {
     /**
      * Foreign key referencing Semester table
      */
-    @NotNull(message = "学期ID不能为空")
-    @Min(value = 1, message = "学期ID必须大于0")
-    private Integer semester_id;
+    @NotNull(message = "学期不能为空")
+    private String semester;
 
     /**
      * Score given in the review 1-5
@@ -86,7 +85,9 @@ public class ReviewAddRequest implements Serializable {
 
         this.review = review.trim();
     }
-
+    public void setSemester(String semester) {
+        this.semester = semester.trim().toLowerCase().replaceAll("\\s+", "");
+    }
     private static final long serialVersionUID = 1L;
 }
 

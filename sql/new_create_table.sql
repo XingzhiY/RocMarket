@@ -62,24 +62,31 @@ CREATE TABLE Course (
                         FOREIGN KEY (professor_id) REFERENCES Professor(id) ON DELETE CASCADE
 );
 
--- Semester table
-CREATE TABLE Semester (
-                          id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key, auto-incremented',
-                          semester_name VARCHAR(20) NOT NULL COMMENT 'Semester name, e.g., 2024春',
-                          UNIQUE (semester_name) COMMENT 'Ensure unique semester names'
-);
-
--- Course_Semester table
-CREATE TABLE Course_Semester (
-                                 id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key, auto-incremented',
-                                 course_id INT NOT NULL COMMENT 'Foreign key referencing Course table',
-                                 semester_id INT NOT NULL COMMENT 'Foreign key referencing Semester table',
-                                 FOREIGN KEY (course_id) REFERENCES Course(id) ON DELETE CASCADE,
-                                 FOREIGN KEY (semester_id) REFERENCES Semester(id) ON DELETE CASCADE
-);
 
 -- Review table
 CREATE TABLE Review (
+                            id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key',
+                            user_id INT NOT NULL COMMENT 'Foreign key referencing User table',
+                            course_id INT NOT NULL COMMENT 'Foreign key referencing Course table',
+                            semester VARCHAR(20) NOT NULL COMMENT 'Semester fall2024',
+
+                            score TINYINT COMMENT 'Score given in the review 1-5',
+                            difficulty TINYINT COMMENT 'Difficulty of the course, 1=低, 2=中等, 3=高',
+                            homework_amount TINYINT COMMENT 'Amount of homework, 1=少, 2=中等, 3=很多',
+                            grading_quality TINYINT COMMENT 'Quality of grading, 1=严苛, 2=一般, 3=宽松',
+                            learning_gain TINYINT COMMENT 'Overall learning gain or experience, 1=很少, 2=一般, 3=很多',
+                            review TEXT COMMENT 'Review or comments on the course',
+
+                            is_deleted TINYINT DEFAULT 0 COMMENT 'Soft delete flag',
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Record creation timestamp',
+                            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Record update timestamp',
+
+                            FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+                            FOREIGN KEY (course_id) REFERENCES Course(id) ON DELETE CASCADE
+);
+
+-- Review table
+CREATE TABLE old_Review (
                         id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key',
                         user_id INT NOT NULL COMMENT 'Foreign key referencing User table',
                         course_id INT NOT NULL COMMENT 'Foreign key referencing Course table',
@@ -102,6 +109,21 @@ CREATE TABLE Review (
 );
 
 
+-- Semester table
+CREATE TABLE Semester (
+                          id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key, auto-incremented',
+                          semester_name VARCHAR(20) NOT NULL COMMENT 'Semester name, e.g., 2024春',
+                          UNIQUE (semester_name) COMMENT 'Ensure unique semester names'
+);
+
+-- Course_Semester table
+CREATE TABLE Course_Semester (
+                                 id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key, auto-incremented',
+                                 course_id INT NOT NULL COMMENT 'Foreign key referencing Course table',
+                                 semester_id INT NOT NULL COMMENT 'Foreign key referencing Semester table',
+                                 FOREIGN KEY (course_id) REFERENCES Course(id) ON DELETE CASCADE,
+                                 FOREIGN KEY (semester_id) REFERENCES Semester(id) ON DELETE CASCADE
+);
 
 -- -----------------------------------------------------------------------------
 -- 修改表字符集为 utf8mb4

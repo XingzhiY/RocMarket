@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
+
 @Component
 public class XmlParser {
 
@@ -22,9 +23,10 @@ public class XmlParser {
     ProfessorService professorService;
     @Resource
     CourseService courseService;
-    public  void parse(String xmlContent) {
+
+    public void parse(String xmlContent) {
         try {
-            System.out.println("-----------=======parse=========-----------------------");
+//            System.out.println("-----------=======parse=========-----------------------");
             // 将字符串转换为输入流
             ByteArrayInputStream input = new ByteArrayInputStream(xmlContent.getBytes("UTF-8"));
 
@@ -56,10 +58,15 @@ public class XmlParser {
 
                     //                    course.setStatus(getTagValue("status", courseElement)); //Closed
 
-                    if (!isValidDouble(getTagValue("credits", courseElement).trim())) {//判断是不是lecture
+                    String creditsStr = getTagValue("credits", courseElement).trim();
+                    if (!isValidDouble(creditsStr)) { // 判断是不是有效的 double 类型
                         continue;
                     }
-                    original_course.setCredits(getTagValue("credits", courseElement).trim());
+                    double credits = Double.parseDouble(creditsStr);
+                    if (credits > 8) { // 判断转换后的 credits 是否大于 8
+                        continue;
+                    }
+                    original_course.setCredits(creditsStr);
 
                     //                    course.setOffered(getTagValue("offered", courseElement));
                     //                    course.setDescription(getTagValue("description", courseElement));
@@ -86,17 +93,18 @@ public class XmlParser {
                     //                            course.setSchedule(schedule);
                     //                        }
                     //                    }
+
                     // 打印解析后的 course 对象
-                    System.out.println(original_course);
+//                    System.out.println(original_course);
 
                     // 过滤空 professor
                     if (original_course.getInstructors() == null || original_course.getInstructors().trim().isEmpty()) {
-                        System.out.println("Skipping course due to empty instructor name: " + original_course.getTitle());
+//                        System.out.println("Skipping course due to empty instructor name: " + original_course.getTitle());
                         continue; // Skip this course if the instructor name is empty
                     }
 
                     // 搞定professor id
-                    Course course=mapFromOriginalCourse(original_course);
+                    Course course = mapFromOriginalCourse(original_course);
                     // 创建查询条件，查找教授的名字是否匹配
                     QueryWrapper<Professor> queryWrapper = new QueryWrapper<>();
                     queryWrapper.eq("name", original_course.getInstructors());
@@ -108,20 +116,20 @@ public class XmlParser {
                         professor = new Professor();
                         professor.setName(original_course.getInstructors());
                         // 你可以在这里设置教授的其他属性，例如教授的部门、职位等
-                        professorService.save(professor);                    }
+                        professorService.save(professor);
+                    }
                     course.setProfessor_id(professor.getId());
 
                     // 判断是否有重复的 course
                     QueryWrapper<Course> courseQueryWrapper = new QueryWrapper<>();
-                    courseQueryWrapper.eq("course_code", course.getCourse_code())
-                            .eq("professor_id", course.getProfessor_id());
+                    courseQueryWrapper.eq("course_code", course.getCourse_code()).eq("professor_id", course.getProfessor_id());
 
                     // 检查数据库中是否存在相同的课程
                     Course existingCourse = courseService.getOne(courseQueryWrapper);
 
                     if (existingCourse != null) {
                         // 如果找到了重复的课程，可以选择更新或者忽略
-                        System.out.println("Duplicate course found: " + existingCourse);
+//                        System.out.println("Duplicate course found: " + existingCourse);
                         // 例如，你可以在这里执行更新操作，而不是插入
                         //TODO 给course添加term
                     } else {
@@ -146,7 +154,7 @@ public class XmlParser {
         course.setCourse_name(originalCourse.getTitle());
 
         // Set credits, converting from double to integer if needed
-//        course.setCredits(Integer.parseInt(originalCourse.getCredits().trim()));
+        //        course.setCredits(Integer.parseInt(originalCourse.getCredits().trim()));
         int credits = (int) Double.parseDouble(originalCourse.getCredits().trim());
         course.setCredits(credits);
 
